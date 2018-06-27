@@ -121,11 +121,14 @@ async function doAction(domain, value, action) {
     return `${action} Succeeded!`;
 }
 
-const action = process.env.CERTBOT_AUTH_OUTPUT ? 'DELETE' : 'UPSERT';
-doAction(process.env.CERTBOT_DOMAIN, process.env.CERTBOT_VALIDATION, action).then((result) => {
-    console.log(result);
-}, (err) => {
-    console.log(err.message);
-});
+
+module.exports = function() {
+    const action = process.env.CERTBOT_AUTH_OUTPUT ? 'DELETE' : 'UPSERT';
+    doAction(process.env.CERTBOT_DOMAIN, process.env.CERTBOT_VALIDATION, action).then((result) => {
+        console.log(result);
+    }, (err) => {
+        console.log(err.message);
+    });
+};
 
 
