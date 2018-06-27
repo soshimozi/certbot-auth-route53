@@ -30,6 +30,8 @@ CERT_DIR="${PWD}/letsencrypt"
 firstrun() {
     mkdir -p "${CERT_DIR}"
 
+    echo "Attempting to create certificates"
+
     certbot certonly \
      --non-interactive \
      --manual \
@@ -47,6 +49,7 @@ firstrun() {
 }
 
 renew() {
+    echo "Attempting to renew existing certificates"
     certbot renew \
      --config-dir "${CERT_DIR}" \
      --work-dir "${CERT_DIR}" \
