@@ -33,8 +33,8 @@ firstrun() {
     certbot certonly \
      --non-interactive \
      --manual \
-     --manual-auth-hook "${PWD}/auth-hook.sh" \
-     --manual-cleanup-hook "${PWD}/auth-hook.sh" \
+     --manual-auth-hook "${PWD}/auth-hook.js" \
+     --manual-cleanup-hook "${PWD}/auth-hook.js" \
      --preferred-challenge dns \
      --config-dir "${CERT_DIR}" \
      --work-dir "${CERT_DIR}" \
@@ -51,7 +51,7 @@ renew() {
      --config-dir "${CERT_DIR}" \
      --work-dir "${CERT_DIR}" \
      --logs-dir "${CERT_DIR}" \
-     --deploy-hook "${PWD}/deploy-hook.sh" \
+     --deploy-hook "${PWD}/deploy-hook.js" \
      "$@"
 }
 
