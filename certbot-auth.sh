@@ -27,22 +27,37 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 CERT_DIR="${PWD}/letsencrypt"
 
-mkdir -p "${CERT_DIR}"
+firstrun() {
+    mkdir -p "${CERT_DIR}"
 
-certbot certonly \
- --non-interactive \
- --manual \
- --manual-auth-hook "${PWD}/auth-hook.sh" \
- --manual-cleanup-hook "${PWD}/auth-hook.sh" \
- --preferred-challenge dns \
- --config-dir "${CERT_DIR}" \
- --work-dir "${CERT_DIR}" \
- --logs-dir "${CERT_DIR}" \
- --agree-tos \
- --email "${EMAIL}" \
- --manual-public-ip-logging-ok \
- -d "${DOMAIN}" \
- "$@"
+    certbot certonly \
+     --non-interactive \
+     --manual \
+     --manual-auth-hook "${PWD}/auth-hook.sh" \
+     --manual-cleanup-hook "${PWD}/auth-hook.sh" \
+     --preferred-challenge dns \
+     --config-dir "${CERT_DIR}" \
+     --work-dir "${CERT_DIR}" \
+     --logs-dir "${CERT_DIR}" \
+     --agree-tos \
+     --email "${EMAIL}" \
+     --manual-public-ip-logging-ok \
+     -d "${DOMAIN}" \
+     "$@"
+}
+
+renew() {
+    certbot renew \
+     --config-dir "${CERT_DIR}" \
+     --work-dir "${CERT_DIR}" \
+     --logs-dir "${CERT_DIR}" \
+     --deploy-hook "${PWD}/deploy-hook.sh" \
+     "$@"
+}
 
 
-
+if [[ -d "${DIRECTORY}" && ! -L "${DIRECTORY}" ]] ; then
+    renew
+else
+    firstrun
+fi
