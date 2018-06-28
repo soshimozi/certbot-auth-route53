@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const route53 = new AWS.Route53();
 
-const {Route53ZoneIteratorAsync, Route53ZonePager} = require('./Route53ZoneIterator');
+const {Route53ZoneIteratorAsync, Route53ZonePager} = require('./route53-zone-iterator');
 
 const ttl = 10;
 

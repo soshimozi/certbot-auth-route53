@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -31,6 +30,7 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
+CHECK_DIR = "${CERT_DIR}/live/${DOMAIN}"
 
 firstrun() {
     mkdir -p "${CERT_DIR}"
@@ -64,7 +64,7 @@ renew() {
 }
 
 
-if [[ -d "${CERT_DIR}" && ! -L "${CERT_DIR}" ]] ; then
+if [[ -d "${CHECK_DIR}" && ! -L "${CHECK_DIR}" ]] ; then
     renew
 else
     firstrun
