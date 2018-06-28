@@ -35,7 +35,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
 CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
-CHECK_DIR="${CERT_DIR}/live/${DOMAIN}"
+CHECK_DIR="${CERT_DIR}/live/${DOMAIN}-0001"
 OPTIONAL=$1
 
 echo "CHECK_DIR ${CHECK_DIR}"
