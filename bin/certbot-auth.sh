@@ -17,6 +17,11 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -f|--folder)
+    FOLDER="$2"
+    shift # past argument
+    shift # past value
+    ;;
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array for later
     shift # past argument
@@ -25,7 +30,7 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-CERT_DIR="${PWD}/letsencrypt"
+CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
 
 firstrun() {
     mkdir -p "${CERT_DIR}"
@@ -59,7 +64,7 @@ renew() {
 }
 
 
-if [[ -d "${DIRECTORY}" && ! -L "${DIRECTORY}" ]] ; then
+if [[ -d "${CERT_DIR}" && ! -L "${CERT_DIR}" ]] ; then
     renew
 else
     firstrun
