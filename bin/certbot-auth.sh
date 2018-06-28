@@ -38,45 +38,6 @@ CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
 CHECK_DIR="${CERT_DIR}/live/${DOMAIN}-0001"
 OPTIONAL=$1
 
-#echo "CHECK_DIR ${CHECK_DIR}"
-#
-#firstrun() {
-#    mkdir -p "${CERT_DIR}"
-#
-#    echo "Attempting to create certificates"
-#
-#    certbot certonly \
-#     --non-interactive \
-#     --manual \
-#     --manual-auth-hook "${PWD}/auth-hook.js" \
-#     --manual-cleanup-hook "${PWD}/auth-hook.js" \
-#     --preferred-challenge dns \
-#     --config-dir "${CERT_DIR}" \
-#     --work-dir "${CERT_DIR}" \
-#     --logs-dir "${CERT_DIR}" \
-#     --agree-tos \
-#     --email "${EMAIL}" \
-#     --manual-public-ip-logging-ok \
-#     --deploy-hook "${PWD}/deploy-hook.js" \
-#     -d "${DOMAIN}" \
-#     $STAGING \
-#     $OPTIONAL \
-#     "$@"
-#}
-
-#renew() {
-#    echo "Attempting to renew existing certificates"
-#
-#    certbot renew \
-#     --config-dir "${CERT_DIR}" \
-#     --work-dir "${CERT_DIR}" \
-#     --logs-dir "${CERT_DIR}" \
-#     --deploy-hook "${PWD}/deploy-hook.js" \
-#     $STAGING \
-#     $OPTIONAL \
-#     "$@"
-#}
-
 mkdir -p "${CERT_DIR}"
 
 certbot certonly \
@@ -96,13 +57,3 @@ certbot certonly \
  $STAGING \
  $OPTIONAL \
  "$@"
-
-#if [[ -n $1 ]]; then
-# echo "optional parameter: $1"
-#fi
-#
-#if [[ -d "${CHECK_DIR}" && ! -L "${CHECK_DIR}" ]] ; then
-#    renew
-#else
-#    firstrun
-#fi
