@@ -17,7 +17,7 @@ const authHook = async () => {
 };
 
 const deployHook = async () => {
-
+    console.log('deploy hook here');
 };
 
 
