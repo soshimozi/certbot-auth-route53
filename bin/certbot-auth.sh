@@ -57,6 +57,7 @@ firstrun() {
      --agree-tos \
      --email "${EMAIL}" \
      --manual-public-ip-logging-ok \
+     --deploy-hook "${PWD}/deploy-hook.js" \
      -d "${DOMAIN}" \
      $STAGING \
      $OPTIONAL \
