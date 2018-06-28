@@ -54,7 +54,7 @@ firstrun() {
      --email "${EMAIL}" \
      --manual-public-ip-logging-ok \
      -d "${DOMAIN}" \
-     EXTRA \
+     $EXTRA \
      "$@"
 }
 
@@ -65,7 +65,7 @@ renew() {
      --work-dir "${CERT_DIR}" \
      --logs-dir "${CERT_DIR}" \
      --deploy-hook "${PWD}/deploy-hook.js" \
-     EXTRA \
+     $EXTRA \
      "$@"
 }
 
