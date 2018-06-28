@@ -22,7 +22,7 @@ case $key in
     shift # past value
     ;;
     -s|--staging)
-    EXTRA=--staging
+    STAGING=--staging
     shift # past argument
     ;;
     *)    # unknown option
@@ -33,8 +33,10 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+
 CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
-CHECK_DIR = "${CERT_DIR}/live/${DOMAIN}"
+CHECK_DIR="${CERT_DIR}/live/${DOMAIN}"
+OPTIONAL=$1
 
 firstrun() {
     mkdir -p "${CERT_DIR}"
@@ -54,7 +56,8 @@ firstrun() {
      --email "${EMAIL}" \
      --manual-public-ip-logging-ok \
      -d "${DOMAIN}" \
-     $EXTRA \
+     $STAGING \
+     $OPTIONAL \
      "$@"
 }
 
@@ -65,10 +68,14 @@ renew() {
      --work-dir "${CERT_DIR}" \
      --logs-dir "${CERT_DIR}" \
      --deploy-hook "${PWD}/deploy-hook.js" \
-     $EXTRA \
+     $STAGING \
+     $OPTIONAL \
      "$@"
 }
 
+if [[ -n $1 ]]; then
+ echo "optional parameter: $1"
+fi
 
 if [[ -d "${CHECK_DIR}" && ! -L "${CHECK_DIR}" ]] ; then
     renew
