@@ -38,6 +38,8 @@ CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
 CHECK_DIR="${CERT_DIR}/live/${DOMAIN}"
 OPTIONAL=$1
 
+echo "CHECK_DIR ${CHECK_DIR}"
+
 firstrun() {
     mkdir -p "${CERT_DIR}"
 
@@ -63,6 +65,7 @@ firstrun() {
 
 renew() {
     echo "Attempting to renew existing certificates"
+
     certbot renew \
      --config-dir "${CERT_DIR}" \
      --work-dir "${CERT_DIR}" \
