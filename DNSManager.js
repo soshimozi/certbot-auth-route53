@@ -64,19 +64,14 @@ module.exports.DNSManager = class {
     }
 
     async deleteTXT(domain, value) {
-        let zoneId = await findZoneIdForDomain(domain);
+        let zoneId = await this._findZoneIdForDomain(domain);
         let changeId = await this._writeRecord(zoneId, `_acme-challenge.${domain}`, value, action);
-
-        //await this._waitForChange(changeId);
         return changeId;
     }
 
     async upsertTXT(domain, value) {
-        let zoneId = await findZoneIdForDomain(domain);
+        let zoneId = await this._findZoneIdForDomain(domain);
         let changeId = await this._writeRecord(zoneId, `_acme-challenge.${domain}`, value, action);
-
-        //await waitForChange(changeId);
-        //return true;
         return changeId;
     }
 
