@@ -21,6 +21,10 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -s|--staging)
+    EXTRA=--staging
+    shift # past argument
+    ;;
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array for later
     shift # past argument
@@ -50,6 +54,7 @@ firstrun() {
      --email "${EMAIL}" \
      --manual-public-ip-logging-ok \
      -d "${DOMAIN}" \
+     EXTRA \
      "$@"
 }
 
@@ -60,6 +65,7 @@ renew() {
      --work-dir "${CERT_DIR}" \
      --logs-dir "${CERT_DIR}" \
      --deploy-hook "${PWD}/deploy-hook.js" \
+     EXTRA \
      "$@"
 }
 

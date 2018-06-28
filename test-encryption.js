@@ -1,8 +1,8 @@
 var AWS = require("aws-sdk");
-AWS.config.update({region:'us-west-1'});
+//AWS.config.update({region:'us-west-1'});
 
-var kms = new AWS.KMS();
-
+var kms = new AWS.KMS({region:'us-west-1'});
+var s3 = new AWS.S3({region:'us-west-1'});
 
 const envelopeFuncs = require('./envelope-encryption');
 
@@ -18,11 +18,23 @@ const testDecrypt  = async (envelope) => {
 };
 
 
+
+
 testEncrypt().then((e) => {
    console.log('done:', e);
 
    testDecrypt(e).then((result) => {
        console.log('result', result);
+
+
+       s3.getObject({
+           Bucket: "centeredyogadance-documents",
+           Key: 'External/CA/mail.centeredyogadance.com.fullchain.pem'
+       },(result,err) => {
+           if(err) console.log(err);
+           else console.log(result);
+       });
+
     });
 
 }, (err) => {
