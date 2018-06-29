@@ -34,7 +34,7 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
-CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
+export CERT_DIR=${FOLDER:-"${PWD}/letsencrypt"}
 CHECK_DIR="${CERT_DIR}/live/${DOMAIN}-0001"
 OPTIONAL=$1
 
