@@ -20,7 +20,7 @@ const deployHook = async () => {
 
     const { uploadS3WithEnvelope } = require('./s3-deploy');
 
-    console.log('deploy hook here:', $RENEWED_DOMAINS );
+    console.log('deploy hook here:', process.env.RENEWED_DOMAINS );
 };
 
 
