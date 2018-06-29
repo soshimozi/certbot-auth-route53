@@ -17,10 +17,10 @@ const authHook = async () => {
 };
 
 const deployHook = async () => {
-    
+
     const { uploadS3WithEnvelope } = require('./s3-deploy');
 
-    console.log('deploy hook here');
+    console.log('deploy hook here:', $RENEWED_DOMAINS );
 };
 
 
