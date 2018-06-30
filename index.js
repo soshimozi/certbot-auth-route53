@@ -33,8 +33,8 @@ const deployHook = async () => {
     let fullChain = fs.readFileSync(`${process.env.RENEWED_LINEAGE}/fullchain.pem`);
     let privKey = fs.readFileSync(`${process.env.RENEWED_LINEAGE}/privkey.pem`)
     
-    console.log(`External/CA/${process.env.RENEWED_DOMAINS}.fullchain.pem`);
-    
+    console.log(`${process.env.DOMAIN_BUCKET}/External/CA/${process.env.RENEWED_DOMAINS}.fullchain.pem`);
+
     await uploadS3WithEnvelope(process.env.DOMAIN_BUCKET, `External/CA/${process.env.RENEWED_DOMAINS}.fullchain.pem`, process.env.CMKID, fullChain.toString('utf8'));
     await uploadS3WithEnvelope(process.env.DOMAIN_BUCKET, `External/CA/${process.env.RENEWED_DOMAINS}.private.pem`, process.env.CMKID, privKey.toString('utf8'));
 };
