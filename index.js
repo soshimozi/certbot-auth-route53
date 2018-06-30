@@ -20,8 +20,9 @@ const deployHook = async () => {
 
     const fs = require('fs');
     const { KMS } = require('aws-sdk');
+    const options = require('./options');
 
-    let region = process.env.AWSREGION || 'us-west-1';
+    let region = options.region || 'us-west-1';
 
     let kms = new KMS({region});
     const { uploadS3WithEnvelope } = require('./s3-deploy')(kms, region);
@@ -30,8 +31,8 @@ const deployHook = async () => {
     let privKey = fs.readFileSync(`${process.env.RENEWED_LINEAGE}/privkey.pem`)
     
     // todo: renewed domains may be multiple items
-    await uploadS3WithEnvelope(process.env.DOMAIN_BUCKET, `External/CA/${process.env.RENEWED_DOMAINS}.fullchain.pem`, process.env.CMKID, fullChain.toString('utf8'));
-    await uploadS3WithEnvelope(process.env.DOMAIN_BUCKET, `External/CA/${process.env.RENEWED_DOMAINS}.private.pem`, process.env.CMKID, privKey.toString('utf8'));
+    await uploadS3WithEnvelope(options.destinationBucket, `External/CA/${process.env.RENEWED_DOMAINS}.fullchain.pem`, options.cmkId, fullChain.toString('utf8'));
+    await uploadS3WithEnvelope(options.destinationBucket, `External/CA/${process.env.RENEWED_DOMAINS}.private.pem`, options.cmkId, privKey.toString('utf8'));
 };
 
 
