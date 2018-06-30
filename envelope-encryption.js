@@ -3,12 +3,12 @@ const ALGO = 'aes256';
 
 module.exports = (kms) => {
     const encrypt = keyBase64 => (plainText, plainTextEnc = 'base64') => {
-        const cipher = crypto.createCipher(ALGO, new Buffer(keyBase64, 'base64'));
+        const cipher = crypto.createCipher(ALGO, Buffer.from(keyBase64, 'base64'));
         return (Buffer.concat([cipher.update(plainText, plainTextEnc), cipher.final()])).toString('base64');
     };
 
     const decrypt = keyBase64 => (cipherText, cipherTextEnc = 'base64') => {
-        const decipher = crypto.createDecipher(ALGO, new Buffer(keyBase64, 'base64'));
+        const decipher = crypto.createDecipher(ALGO, Buffer.from(keyBase64, 'base64'));
         return (Buffer.concat([decipher.update(cipherText, cipherTextEnc), decipher.final()])).toString('base64');
     };
 
@@ -27,7 +27,7 @@ module.exports = (kms) => {
 
     const decryptTenantMasterKey = async (cipherTextBase64) => {
         const result = await kms.decrypt({
-            CiphertextBlob: new Buffer(cipherTextBase64, 'base64'),
+            CiphertextBlob: Buffer.from(cipherTextBase64, 'base64'),
         }).promise();
         return {
             cmkId: result.KeyId,
@@ -68,7 +68,7 @@ module.exports = (kms) => {
         } = envelope;
         const tmk = await decryptTenantMasterKey(tmkCipherText);
         const tdk = decrypt(tmk.plainText)(tdkCipherText);
-        const dataPlainText = (new Buffer((decrypt(tdk)(dataCipherText)), 'base64')).toString(outputEnc);
+        const dataPlainText = (Buffer.from((decrypt(tdk)(dataCipherText)), 'base64')).toString(outputEnc);
         return {
             cmkId: tmk.cmkId,
             dataPlainText,
