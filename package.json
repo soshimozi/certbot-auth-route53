@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "async-waterfall": "^0.1.5",
-    "aws-sdk": "^2.263.1"
+    "aws-sdk": "^2.263.1",
+    "jshint": "^2.9.5"
   },
   "devDependencies": {}
 }

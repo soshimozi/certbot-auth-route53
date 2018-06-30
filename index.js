@@ -1,6 +1,6 @@
-const { DNSManager } = require('./dns-manager');
-
 const authHook = async () => {
+
+    const { DNSManager } = require('./dns-manager');
 
     const remove = process.env.CERTBOT_AUTH_OUTPUT ? true : false;
     const manager = new DNSManager();
@@ -18,10 +18,19 @@ const authHook = async () => {
 
 const deployHook = async () => {
 
+    const fs = require('fs');
     const { uploadS3WithEnvelope } = require('./s3-deploy');
 
-    console.log('deploy hook here:', process.env.RENEWED_DOMAINS );
-    console.log('env:', process.env);
+
+    //console.log('deploy hook here:', process.env.RENEWED_DOMAINS );
+    //console.log('lineage:', process.env.RENEWED_LINEAGE);
+
+    // todo: renewed domains may be multiple items
+    let fullChain = fs.readFileSync(`${process.env.RENEWED_LINEAGE}/fullchain.pem`);
+    let privKey = fs.readFileSync(`${process.env.RENEWED_LINEAGE}/privkey.pem`)
+    
+    uploadS3WithEnvelope(process.env.DOMAIN_BUCKET, `External/CA/${process.env.RENEWED_DOMAINS}/fullchain.pem`, fullChain);
+    uploadS3WithEnvelope(process.env.DOMAIN_BUCKET, `External/CA/${process.env.RENEWED_DOMAINS}/fullchain.pem`, privKey);
 };
 
 
