@@ -35,4 +35,9 @@ module.exports = (kms, region) => {
     const downloadS3Envelope = async (bucket, key, outputEnc='base64') => {
 
     };
+
+    return {
+        uploadS3WithEnvelope,
+        downloadS3Envelope
+    };    
 };
