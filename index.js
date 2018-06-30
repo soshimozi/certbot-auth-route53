@@ -19,8 +19,12 @@ const authHook = async () => {
 const deployHook = async () => {
 
     const fs = require('fs');
-    const { uploadS3WithEnvelope } = require('./s3-deploy');
+    const { KMS } = require('aws-sdk');
 
+    let region = process.env.AWSREGION || 'us-west-1';
+
+    let kms = new KMS({region});
+    const { uploadS3WithEnvelope } = require('./s3-deploy')(kms, region);
 
     //console.log('deploy hook here:', process.env.RENEWED_DOMAINS );
     //console.log('lineage:', process.env.RENEWED_LINEAGE);
