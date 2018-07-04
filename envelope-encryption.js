@@ -1,14 +1,24 @@
 const crypto = require('crypto');
-const ALGO = 'aes256';
+const ALGO = 'AES-256-CBC';
+
+const IV_LENGTH = 16; // For AES, this is always 16
+const KEY_LENGTH = 32; // (32 characters, or 256 bytes)
 
 module.exports = (kms) => {
-    const encrypt = keyBase64 => (plainText, plainTextEnc = 'base64') => {
-        const cipher = crypto.createCipher(ALGO, Buffer.from(keyBase64, 'base64'));
-        return (Buffer.concat([cipher.update(plainText, plainTextEnc), cipher.final()])).toString('base64');
+
+    const encrypt = (keyBase64) => (plainText, plainTextEnc = 'utf8') => {
+
+        const Iv = crypto.randomBytes(IV_LENGTH);
+        const cipher = crypto.createCipheriv(ALGO, Buffer.from(keyBase64, 'base64'), Iv);
+
+        let cipherText = cipher.update(plainText, plainTextEnc, 'base64');
+        cipherText += cipher.final('base64');   
+
+        return { cipherText, Iv };
     };
 
-    const decrypt = keyBase64 => (cipherText, cipherTextEnc = 'base64') => {
-        const decipher = crypto.createDecipher(ALGO, Buffer.from(keyBase64, 'base64'));
+    const decrypt = (keyBase64, ivBase64) => (cipherText, cipherTextEnc = 'utf8') => {
+        const decipher = crypto.createCipheriv(ALGO, Buffer.from(keyBase64, 'base64'), Buffer.from(ivBase64, 'base64'));
         return (Buffer.concat([decipher.update(cipherText, cipherTextEnc), decipher.final()])).toString('base64');
     };
 
@@ -36,27 +46,33 @@ module.exports = (kms) => {
     };
 
     const createDataKey = async (tmkPlainText) => {
-        const { Plaintext } = await kms.generateRandom({
-            NumberOfBytes: 32,
-        }).promise();
-        const cipherText = encrypt(tmkPlainText)(Plaintext.toString('base64'));
+
+        let Plaintext = crypto.randomBytes(KEY_LENGTH);
+
+        const { cipherText, Iv } = encrypt(tmkPlainText)(Plaintext.toString('base64'));
         return {
-            plainText: Plaintext.toString('base64'),
+            Plaintext,
             cipherText,
-            createdAt: (new Date()).toISOString(),
+            Iv,
+            createdAt: (new Date()).toISOString()
         };
+
     };
 
-    const encryptEnvelope = (cmkId, tmkCipherText) => async (dataPlainText, inputEnc = 'utf8') => {
+    const encryptEnvelope = (tmkCipherText) => async (dataPlainText, inputEnc = 'utf8') => {
+        
         const tmkPlainTextBase64 = await decryptTenantMasterKey(tmkCipherText);
         const tdk = await createDataKey(tmkPlainTextBase64.plainText);
-        const dataCipherText = encrypt(tdk.plainText)(dataPlainText, inputEnc);
+
+        const { cipherText, Iv } = encrypt(tdk.Plaintext)(dataPlainText, inputEnc);
+
         return {
-            cmkId,
             tmkCipherText,
             tdkCipherText: tdk.cipherText,
-            dataCipherText,
-            createdAt: (new Date()).toISOString(),
+            tdkIV: tdk.Iv,
+            dataCipherText : cipherText,
+            dataIV: Iv,
+            createdAt: (new Date()).toISOString()
         };
     };
 
