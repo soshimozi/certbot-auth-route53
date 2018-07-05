@@ -36,6 +36,9 @@ module.exports = (kms) => {
     };
 
     const decryptTenantMasterKey = async (cipherTextBase64) => {
+
+        console.log('cipherTextbase64', cipherTextBase64);
+        
         try {
             const result = await kms.decrypt({
                 CiphertextBlob: Buffer.from(cipherTextBase64, 'base64'),
