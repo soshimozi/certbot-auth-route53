@@ -36,13 +36,18 @@ module.exports = (kms) => {
     };
 
     const decryptTenantMasterKey = async (cipherTextBase64) => {
-        const result = await kms.decrypt({
-            CiphertextBlob: Buffer.from(cipherTextBase64, 'base64'),
-        }).promise();
-        return {
-            cmkId: result.KeyId,
-            plainText: result.Plaintext.toString('base64'),
-        };
+        try {
+            const result = await kms.decrypt({
+                CiphertextBlob: Buffer.from(cipherTextBase64, 'base64'),
+            }).promise();
+            return {
+                cmkId: result.KeyId,
+                plainText: result.Plaintext.toString('base64'),
+            };
+        }
+        catch(error) {
+            console.error(error);
+        }
     };
 
     const createDataKey = async (tmkPlainText) => {
@@ -64,7 +69,7 @@ module.exports = (kms) => {
         const tmkPlainTextBase64 = await decryptTenantMasterKey(tmkCipherText);
 
         console.log('master key', tmkPlainTextBase64);
-        
+
         const tdk = await createDataKey(tmkPlainTextBase64.plainText);
 
         const { cipherText, Iv } = encrypt(tdk.Plaintext)(dataPlainText, inputEnc);
