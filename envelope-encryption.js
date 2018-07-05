@@ -66,12 +66,19 @@ module.exports = (kms) => {
 
         const { cipherText, Iv } = encrypt(tdk.Plaintext)(dataPlainText, inputEnc);
 
+        const hmac = crypto.createHmac('SHA256', tmkPlainTextBase64.plainText);
+        hmac.update(cipherText);
+        hmac.update(Iv.toString('base64'));
+
         return {
             tmkCipherText,
             tdkCipherText: tdk.cipherText,
             tdkIV: tdk.Iv,
+            tdkIVBase64: tdk.Iv.toString('base64'),
             dataCipherText : cipherText,
             dataIV: Iv,
+            dataIVBase64: Iv.toString('base64'),
+            hmac: hmac.digest('base64'),
             createdAt: (new Date()).toISOString()
         };
     };

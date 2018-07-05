@@ -18,7 +18,10 @@ module.exports = (kms, region) => {
             ServerSideEncryption: 'AES256',
             Metadata: {
                 'tdkCipherText': envelope.tdkCipherText,
-                'tmkCipherText': envelope.tmkCipherText
+                'tmkCipherText': envelope.tmkCipherText,
+                'tdkIV' : envelope.tdkIVBase64,
+                'dataIV': envelope.dataIVBase64,
+                'hmac': envelope.hmac
             }
         }
         
