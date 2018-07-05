@@ -37,8 +37,6 @@ module.exports = (kms) => {
 
     const decryptTenantMasterKey = async (cipherTextBase64) => {
 
-        console.log('cipherTextbase64', cipherTextBase64);
-        
         try {
             const result = await kms.decrypt({
                 CiphertextBlob: Buffer.from(cipherTextBase64, 'base64'),
@@ -70,8 +68,6 @@ module.exports = (kms) => {
     const encryptEnvelope = (tmkCipherText) => async (dataPlainText, inputEnc = 'utf8') => {
         
         const tmkPlainTextBase64 = await decryptTenantMasterKey(tmkCipherText);
-
-        console.log('master key', tmkPlainTextBase64);
 
         const tdk = await createDataKey(tmkPlainTextBase64.plainText);
 

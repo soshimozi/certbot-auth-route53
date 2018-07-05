@@ -9,12 +9,7 @@ module.exports = (kms, region) => {
    
         let tmk = await createTenantMasterKey(cmkId)
 
-        console.log(tmk);
-        console.log(plainText);
-
         let envelope = await encryptEnvelope(tmk.cipherText)(plainText, encoding);
-
-        console.log(envelope);
         
         let params = {
             Body: envelope.dataCipherText,
