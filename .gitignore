@@ -68,4 +68,4 @@ letsencrypt
 
 .vscode
 
-options.js
+bin/options.js
