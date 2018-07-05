@@ -62,6 +62,9 @@ module.exports = (kms) => {
     const encryptEnvelope = (tmkCipherText) => async (dataPlainText, inputEnc = 'utf8') => {
         
         const tmkPlainTextBase64 = await decryptTenantMasterKey(tmkCipherText);
+
+        console.log('master key', tmkPlainTextBase64);
+        
         const tdk = await createDataKey(tmkPlainTextBase64.plainText);
 
         const { cipherText, Iv } = encrypt(tdk.Plaintext)(dataPlainText, inputEnc);
