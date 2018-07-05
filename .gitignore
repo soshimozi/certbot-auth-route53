@@ -67,3 +67,5 @@ typings/
 letsencrypt
 
 .vscode
+
+options.js
