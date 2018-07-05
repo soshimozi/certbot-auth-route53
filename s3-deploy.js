@@ -12,7 +12,7 @@ module.exports = (kms, region) => {
         console.log(tmk);
         console.log(plainText);
 
-        let envelope = await encryptEnvelope(cmkId, tmk.cipherText)(plainText, encoding);
+        let envelope = await encryptEnvelope(tmk.cipherText)(plainText, encoding);
 
         console.log(envelope);
         
